@@ -1,0 +1,6 @@
+@RentalSystem.Api_HostAddress = http://localhost:5212
+
+GET {{RentalSystem.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

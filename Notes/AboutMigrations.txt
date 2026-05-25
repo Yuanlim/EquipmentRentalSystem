@@ -1,0 +1,5 @@
+// To add migrations
+dotnet ef migrations add [name] --project src/Infrastructure --startup-project src/Api --output-dir Data/Migrations
+
+// To remove migrations
+dotnet ef migrations remove --project src/Infrastructure --startup-project src/Api
