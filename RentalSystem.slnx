@@ -1,4 +1,5 @@
 <Solution>
+  <Folder Name="/src/" />
   <Folder Name="/src/Api/">
     <Project Path="src/Api/RentalSystem.Api.csproj" />
   </Folder>
@@ -10,5 +11,9 @@
   </Folder>
   <Folder Name="/src/Infrastructure/">
     <Project Path="src/Infrastructure/RentalSystem.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/" />
+  <Folder Name="/src/Test/">
+    <Project Path="src/Test/RentalSystem.Test.csproj" />
   </Folder>
 </Solution>

@@ -1,0 +1,34 @@
+OpenAPI:
+Auto generate documentation of your endpoint.
+That includes Api:
+1. Desired request body type.
+2. Response type (error/ok must declared) or status code.
+3. Description that was written by user.
+4. Http method.
+5. Route path: Example /api/payment/{payment_id}
+6. Path param: payment_id
+7. Query param: /api/payment/is_paid?starting_date="1000-01-01"to="1001-01-01"
+8. return DTO type
+
+
+Scalar:
+Documentation UI that works with OpenAPI (for me). 
+Scalar fetches the OpenAPI JSON endpoint, such as 
+/api/document.json, and renders it as a documentation UI.
+(This should be disable when not in development stage)
+
+MediatR:
+MediatR handles a Command/Query object sent from an endpoint, 
+Hangfire job, or other. If configured MediatR pipeline
+behavior, you basically tells MediatR how the flow it
+should be running.
+
+For my project. Behavior pipeline -> Handler
+
+In this case, it execute behavior pipeline (Who is
+required before reaching main handler like Authorize,
+Validation, Exception fallback, Logging) first, then 
+to the main Command/Query handler who matches the 
+endpoint object type. Finally handler returns the 
+obj/result for endpoint to response.
+

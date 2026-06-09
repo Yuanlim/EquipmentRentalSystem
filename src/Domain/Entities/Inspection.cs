@@ -5,15 +5,20 @@ namespace RentalSystem.Domain.Entities;
 
 public class Inspection : RentalSystemDbBase
 {
-    public Guid RentalOrderId { get; set; }
+    public Guid RentalOrderId { get; init; }
 
-    public Guid RentalOrderItemId { get; set; }
+    public RentalOrder RentalOrder { get; init; } = null!;
 
-    public Guid TechnicianId { get; set; }
+    public Guid RentalOrderItemId { get; init; }
 
-    public DateTime InspectionAt { get; set; }
+    public RentalOrderItem RentalOrderItem { get; init; } = null!;
+
+    public required string TechnicianId { get; init; }
+
+    public DateTime InspectionAt { get; init; } = DateTime.UtcNow;
 
     public string Comments { get; set; } = "";
 
-    public EquipmentItemCondition DeterminedCondition { get; set; }
+    // Maybe not finish inspected
+    public EquipmentItemCondition? DeterminedCondition { get; set; }
 }

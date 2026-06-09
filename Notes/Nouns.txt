@@ -1,0 +1,9 @@
+"In an Assembly":
+Same application compile to the same Assembly.
+
+"Reflection":
+Reflection allows the application to inspect metadata inside an assembly 
+at runtime, such as:
+Classes, interfaces, methods, properties, constructors, and attributes.
+You could use Reflection accessing those things that matches your needs 
+and possibly configured them at once.

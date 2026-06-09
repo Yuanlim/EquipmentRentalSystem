@@ -5,18 +5,39 @@ namespace RentalSystem.Domain.Entities;
 
 public class MaintenanceJob : RentalSystemDbBase
 {
+    private MaintenanceJob() { }
+
+    public MaintenanceJob(Damage damage)
+    {
+        DamageId = damage.Id;
+        Damage = damage;
+        MaintenanceStatus = MaintenanceStatus.Pending;
+    }
+
     // A maintenance job can be not pick up yet
-    public Guid? TechnicianId { get; set; }
+    public string? TechnicianId { get; private set; }
 
-    // A maintenance job can handle many damages
-    public required ICollection<Damage> Damages { get; set; }
+    // A maintenance job can handle one damage
+    public Guid DamageId { get; private set; }
 
-    public MaintenanceStatus MaintenanceStatus { get; set; }
+    public Damage Damage { get; private set; } = null!;
 
-    public DateTime CreateAt { get; set; }
+    public MaintenanceStatus MaintenanceStatus { get; private set; }
+
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     // Is nullable because it possibly not yet completed
-    public DateTime? CompletedAt { get; set; }
+    public DateTime? CompletedAt { get; private set; }
 
-    public string Description { get; set; } = "";
+    public string Description { get; private set; } = "";
+
+    public void CreateMaintenanceJob(Damage damage)
+    {
+        if (damage.Fixed)
+            throw new InvalidOperationException("This damage already been fixed.");
+
+        TechnicianId = null;
+        DamageId = damage.Id;
+        MaintenanceStatus = MaintenanceStatus.Pending;
+    }
 }

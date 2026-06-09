@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentalSystem.Domain.Common;
 
-public class RentalSystemDbBase
+public abstract class RentalSystemDbBase
 {
     [Required]
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     // This cant be reassign new list
     private readonly List<BaseEvent> _domainEvents = [];
@@ -28,5 +28,13 @@ public class RentalSystemDbBase
     public void ClearEvent()
     {
         _domainEvents.Clear();
+    }
+
+    protected static string ValidateUserId(string userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new ArgumentException("UserId cant be null or whitespace");
+
+        return userId;
     }
 }

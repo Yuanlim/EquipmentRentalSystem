@@ -23,13 +23,13 @@ public class AuditConfiguration : IEntityTypeConfiguration<Audit>
                 .HasMaxLength(100);
 
         builder.ToTable("Audits", a => a.HasCheckConstraint(
-            "OldAndNewCantBeSameValue",
+            "CK_Audit_OldAndNewCantBeSameValue",
             @" ""OldValue"" IS NULL OR ""NewValue"" IS NULL OR ""OldValue"" <> ""NewValue"" "
         ));
 
         builder.ToTable("Audits", a => a.HasCheckConstraint(
-            "PerformedAtCantBeFuture",
-            @" ""PerformedAt"" <= ""CURRENT_TIMESTAMP"" "
+            "CK_Audit_PerformedAtCantBeFuture",
+            @" ""PerformedAt"" <= CURRENT_TIMESTAMP "
         ));
     }
 }

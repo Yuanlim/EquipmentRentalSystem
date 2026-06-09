@@ -3,3 +3,6 @@ dotnet ef migrations add [name] --project src/Infrastructure --startup-project s
 
 // To remove migrations
 dotnet ef migrations remove --project src/Infrastructure --startup-project src/Api
+
+// To update database
+dotnet ef database update --project src/Infrastructure --startup-project src/Api

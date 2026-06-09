@@ -5,18 +5,20 @@ namespace RentalSystem.Domain.Entities;
 
 public class RentalStatusHistory : RentalSystemDbBase
 {
-    public Guid RentalOrderId { get; set; }
 
-    public required RentalOrder RentalOrder { get; set; }
+    public Guid RentalOrderId { get; init; }
 
-    public Guid? ChangedByUserId { get; set; }
+    public RentalOrder RentalOrder { get; set; } = null!;
 
-    public DateTime CreatedAt
-    { get; set; }
+    private DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public RentalStatus? OldStatus { get; set; }
+    public string? ChangedByUserId { get; init; }
 
-    public RentalStatus NewStatus { get; set; }
+    public RentalStatus? OldStatus { get; init; }
 
-    public string Reason { get; set; } = "";
+    public RentalStatus NewStatus { get; init; }
+
+    public string Reason { get; init; } = "";
+
+    public DateTime GetCreatedAt => CreatedAt;
 }

@@ -5,15 +5,31 @@ namespace RentalSystem.Domain.Entities;
 
 public class Payment : RentalSystemDbBase
 {
-    public Guid RentalOrderId { get; set; }
+    private Payment() { }
 
-    public PaymentType PaymentType { get; set; }
+    public Payment(
+        Guid rentalOrderId,
+        PaymentType paymentType,
+        decimal amount
+    )
+    {
+        RentalOrderId = rentalOrderId;
+        PaymentType = paymentType;
+        PaymentStatus = PaymentStatus.Pending;
+        Amount = amount;
+    }
 
-    public PaymentStatus PaymentStatus { get; set; }
+    public Guid RentalOrderId { get; private set; }
 
-    public decimal Amount { get; set; }
+    public RentalOrder RentalOrder { get; private set; } = null!;
 
-    public DateTime? PaidAt { get; set; }
+    public PaymentType PaymentType { get; private set; }
 
-    public DateTime CreatedAt { get; set; }
+    public PaymentStatus PaymentStatus { get; private set; }
+
+    public decimal Amount { get; private set; }
+
+    public DateTime? PaidAt { get; private set; }
+
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 }

@@ -1,14 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using RentalSystem.Infrastructure.Data;
+using RentalSystem.Api.Infrastructure;
+using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using RentalSystem.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
-));
+builder.AddInfrastructureServices();
+builder.AddApplicationServices();
+
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, NotEmailSender>();
+builder.AddWebServices();
 
 var app = builder.Build();
 
@@ -16,32 +23,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // Learn OpenAPI with Scalar with ASP.NET Core
+    // https://medium.com/@FitoMAD/asp-net-core-openapi-with-scalar-c430051bbabf
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "Rental System API";
+        options.Theme = ScalarTheme.Kepler;
+    });
+    await app.InitializerDatabaseAsync();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapEndpoints(typeof(Program).Assembly);
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
