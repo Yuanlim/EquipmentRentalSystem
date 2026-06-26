@@ -1,4 +1,4 @@
-namespace RentalSystem.Domain.Enum;
+namespace RentalSystem.Domain.Enum.Extensions;
 
 public static class RentalStatusExtension
 {

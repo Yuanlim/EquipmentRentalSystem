@@ -1,9 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using RentalSystem.Infrastructure.Data;
 using RentalSystem.Api.Infrastructure;
 using Scalar.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using RentalSystem.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.AddInfrastructureServices();
 builder.AddApplicationServices();
-
-builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, NotEmailSender>();
 builder.AddWebServices();
 
 var app = builder.Build();
@@ -33,7 +27,17 @@ if (app.Environment.IsDevelopment())
     await app.InitializerDatabaseAsync();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+app.UseCors(static builder =>
+    builder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowAnyOrigin());
+
+app.UseFileServer();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapEndpoints(typeof(Program).Assembly);
 

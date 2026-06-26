@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
@@ -14,7 +15,9 @@ internal sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvi
     public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
         var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
-        if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
+        // Check IdentityConstants is mismatched document doesn't showup the auth scheme
+        // if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer")) // original
+        if (authenticationSchemes.Any(authScheme => authScheme.Name == IdentityConstants.BearerScheme))
         {
             var requirements = new Dictionary<string, IOpenApiSecurityScheme>
             {

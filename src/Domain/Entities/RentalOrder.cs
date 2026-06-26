@@ -1,5 +1,6 @@
 using RentalSystem.Domain.Common;
 using RentalSystem.Domain.Enum;
+using RentalSystem.Domain.Enum.Extensions;
 
 namespace RentalSystem.Domain.Entities;
 

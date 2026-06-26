@@ -27,9 +27,7 @@ public static class DependencyInjection
         {
             options.AddOperationTransformer<ApiExceptionOperationTransformer>(); // Foggy
             options.AddOperationTransformer<IdentityApiOperationTransformer>();
-#if (UseApiOnly)
             options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-#endif
         });
 
         builder.Services.AddCors();

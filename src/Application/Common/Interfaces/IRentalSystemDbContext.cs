@@ -24,4 +24,6 @@ public interface IRentalSystemDbContext
     DbSet<EquipmentItem> EquipmentItems { get; }
 
     DbSet<Audit> Audits { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

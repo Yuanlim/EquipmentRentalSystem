@@ -45,7 +45,7 @@ public class DbInitializer
             // await _dbContext.Database.EnsureDeletedAsync();
             // await _dbContext.Database.EnsureCreatedAsync();
 
-            await _dbContext.Database.MigrateAsync();
+            // await _dbContext.Database.MigrateAsync();
         }
         catch (Exception e)
         {
@@ -80,10 +80,64 @@ public class DbInitializer
         await RoleSeeding(customerRole);
 
         // user seeding -> create user based on this role
-        IList<ApplicationUser> adminUsers = [new() { UserName = "AdministratorJohn", Email = "AdministratorJohnAtTomRental@gmail.com" }];
-        IList<ApplicationUser> technicianUsers = [new() { UserName = "TechnicianMichael", Email = "TechnicianMichaelAtTomRental@gmail.com" }, new() { UserName = "TechnicianDavid", Email = "TechnicianDavidAtTomRental@gmail.com" }];
-        IList<ApplicationUser> staffUsers = [new() { UserName = "StaffJames", Email = "StaffJamesAtTomRental@gmail.com" }, new() { UserName = "StaffSarah", Email = "StaffSarahAtTomRental@gmail.com" }];
-        IList<ApplicationUser> customerUsers = [new() { UserName = "Robert", Email = "RobertHelloWorld@gmail.com" }, new() { UserName = "Alex", Email = "AlexHelloWorld@gmail.com" }, new() { UserName = "Jenny", Email = "JennyHelloWorld@gmail.com" }];
+        IList<ApplicationUser> adminUsers = [
+            new()
+            {
+                DisplayUserName = "AdministratorJohn",
+                UserName = "AdministratorJohnAtTomRental@gmail.com",
+                Email = "AdministratorJohnAtTomRental@gmail.com"
+            }
+        ];
+
+        IList<ApplicationUser> technicianUsers = [
+            new()
+            {
+                DisplayUserName = "TechnicianMichael",
+                UserName = "TechnicianMichaelAtTomRental@gmail.com",
+                Email = "TechnicianMichaelAtTomRental@gmail.com"
+            },
+            new()
+            {
+                DisplayUserName = "TechnicianDavid",
+                UserName = "TechnicianDavidAtTomRental@gmail.com",
+                Email = "TechnicianDavidAtTomRental@gmail.com",
+            }
+        ];
+
+        IList<ApplicationUser> staffUsers = [
+            new()
+            {
+                DisplayUserName = "StaffJames",
+                UserName = "StaffJamesAtTomRental@gmail.com",
+                Email = "StaffJamesAtTomRental@gmail.com"
+            },
+            new() {
+                DisplayUserName = "StaffSarah",
+                UserName = "StaffSarahAtTomRental@gmail.com",
+                Email = "StaffSarahAtTomRental@gmail.com"
+            }
+        ];
+
+        IList<ApplicationUser> customerUsers = [
+            new()
+            {
+                DisplayUserName = "Robert",
+                UserName = "RobertHelloWorld@gmail.com",
+                Email = "RobertHelloWorld@gmail.com"
+            },
+            new()
+            {
+                DisplayUserName = "Alex",
+                UserName = "AlexHelloWorld@gmail.com",
+                Email = "AlexHelloWorld@gmail.com"
+            },
+            new()
+            {
+                DisplayUserName = "Jenny",
+                UserName = "JennyHelloWorld@gmail.com",
+                Email = "JennyHelloWorld@gmail.com"
+            }
+        ];
 
         await UserSeeding(administratorRole, adminUsers);
         await UserSeeding(technicianRole, technicianUsers);

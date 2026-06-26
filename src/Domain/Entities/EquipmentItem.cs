@@ -21,10 +21,25 @@ public class EquipmentItem : RentalSystemDbBase
         string assetUniqueIdentifier
     )
     {
-        // Domain rules
-        EquipmentItemRuleSet(depositFee: depositFee, feePerDay: feePerDay, lateFeePerDay: lateFeePerDay, description: description, name: name, serialNumber: serialNumber, assetUniqueIdentifier: assetUniqueIdentifier);
+        // Rules
+        EquipmentItemRules(
+            depositFee,
+            feePerDay,
+            lateFeePerDay,
+            equipmentCategory,
+            condition,
+            status,
+            description,
+            name,
+            serialNumber,
+            assetUniqueIdentifier
+        );
+
 
         // Assign
+        DepositFee = depositFee;
+        FeePerDay = feePerDay;
+        LateFeePerDay = lateFeePerDay;
         CategoryId = equipmentCategory.Id;
         EquipmentCategory = equipmentCategory;
         Condition = condition;
@@ -34,6 +49,8 @@ public class EquipmentItem : RentalSystemDbBase
         SerialNumber = serialNumber;
         ImagePath = imagePath;
         AssetTag = AssetUniqueIdentifierToTag(equipmentCategory, assetUniqueIdentifier);
+
+        equipmentCategory.AddEquipmentItem(this);
     }
 
     // Counter get item initial fee
@@ -70,43 +87,36 @@ public class EquipmentItem : RentalSystemDbBase
     // A distinguish name about this device (Whole company)
     public string AssetTag { get; private set; } = "";
 
-    public void EquipmentItemRuleSet(
+    public void EquipmentItemRules(
         decimal depositFee,
         decimal feePerDay,
         decimal lateFeePerDay,
-        string description,
+        EquipmentCategory equipmentCategory,
+        EquipmentItemCondition condition,
+        EquipmentItemStatus status,
+        string? description,
         string name,
         string serialNumber,
         string assetUniqueIdentifier
     )
     {
-        if (depositFee < 0)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Deposit fee shouldn't be negative.");
+        ThrowIfLessThan<EquipmentItem>(depositFee, 0);
+        ThrowIfLessThan<EquipmentItem>(feePerDay, 0);
+        ThrowIfLessThan<EquipmentItem>(lateFeePerDay, 0);
 
-        if (feePerDay < 0)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Fee per day shouldn't be negative.");
+        ThrowIfIsNull<EquipmentItem, EquipmentCategory>(equipmentCategory);
+        ThrowIfIsNull<EquipmentItem, EquipmentItemCondition>(condition);
+        ThrowIfIsNull<EquipmentItem, EquipmentItemStatus>(status);
 
-        if (lateFeePerDay < 0)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Late fee per day shouldn't be negative.");
+        ThrowIfIsNullOrWhiteSpace<EquipmentItem>(name);
+        ThrowIfIsNullOrWhiteSpace<EquipmentItem>(serialNumber);
 
-        if (description.Length > 2000)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Description length shouldn't be larger than 2000.");
+        ThrowIfExceededLength<EquipmentItem>(description, 2000);
+        ThrowIfExceededLength<EquipmentItem>(name, 200);
+        ThrowIfExceededLength<EquipmentItem>(serialNumber, 200);
 
-        if (name.Length > 200)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Name length shouldn't be larger than 200.");
-
-        if (assetUniqueIdentifier.Length > 200)
-            throw new ArgumentException($"{nameof(EquipmentItem)} Asset Tag length shouldn't be larger than 200.");
-
-        if (serialNumber.Length > 200)
-            throw new ArgumentException($"{nameof(EquipmentItem)} serial number length shouldn't be larger than 200.");
-
-        // AssetTag should be category name followed by some unique identifier business defined:
-        // {Category}-{unique identifier}
         if (string.IsNullOrWhiteSpace(assetUniqueIdentifier))
-        {
             throw new ArgumentException($"{nameof(EquipmentItem)} assets unique identifier should be given; Because assets tag should be category asset tag prefix followed by some unique identifier. Ex:CAM-001, CAM-A001");
-        }
     }
 
     public string AssetUniqueIdentifierToTag(EquipmentCategory equipmentCategory, string identifier)

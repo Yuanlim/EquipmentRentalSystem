@@ -1,0 +1,81 @@
+-> Api -- everything that involves in handling incoming request
+    -> Program.cs -- Application startup file. Call the necessary configurations extension.
+    -> DependencyInjection.cs -- Service registrations to a container for API.
+    -> Endpoints -- Contain endpoints classes that handle different request.
+        -> EquipmentItem.cs -- EquipmentItem based endpoints.
+        -> {class_name}.cs -- {class_name} based endpoints.
+        -> User.cs -- Carried default and customized endpoints about identity.
+    -> Infrastructure -- Supporting components for Api. Including documentation, exception handling, etc.
+        -> ApiExceptionOperationTransformer.cs -- Support Api documentation by adding default status code and user definite ones.
+        -> BearerSecuritySchemeTransformer.cs -- It document my authentication scheme option. (This shouldn't be touched)
+        -> EndpointRouteBuilderExtensions.cs -- Always add .WithName() if evoking Map{Method} for OpenAPI as Endpoint name. (This shouldn't be touched)
+        -> IdentityApiOperationTransformer.cs -- Add Identity endpoints documentation. (This shouldn't be touched)
+        -> IEndpointGroup.cs -- A contract for building endpoints. (This shouldn't be touched)
+        -> MethodInfoExtensions.cs -- An anonymous function like (minimum API) wound contain '<' and '>'. If it is an anonymous function it should have .WithName() defined. (This shouldn't be touched)
+        -> ProblemDetailsExceptionHandler.cs -- Maps different exception types to configured HTTP status code. (Frequently touched)
+        -> WebApplicationExtensions.cs -- When a route prefix is not given as an IEndpointGroup implementation. Default as /api/{class_name}
+    -> Service -- Small application operation
+        -> CurrentUser.cs -- For endpoints/services to access the current user data right away. (Not sure)
+-> Application -- Use cases for application
+    -> DependencyInjection.cs -- Service registrations to a container for Application like MediatR.
+    -> Common -- Shared common components that is used in application.
+        -> Behaviors -- Defines pipeline to execute before reaching handler.
+            -> AuthorizationBehavior.cs -- Check handler Authorization attribute requirements and see if user satisfy it.
+            -> LoggingBehavior.cs -- Log request information.
+            -> PerformanceBehavior.cs -- Performance measurement ends after request finish.
+            -> UnhandledExceptionBehavior.cs -- Catches exception and log it.
+            -> ValidationBehavior.cs -- Execute all validator to this request type.
+        -> Exceptions -- Defines new kinds of exception for application.
+            -> ForbiddenAccessException.cs -- Authorize not satisfy user exception.
+            -> ValidationException.cs -- Validation failed exception and map the message.
+        -> Interfaces -- Defines services contract, use interface to constraints methods and not care about inter implementation.
+            -> IIdentityService.cs -- What identity base service should implement.
+            -> IRentalSystemDbContext.cs -- What tables and method we should have for handler.
+            -> IUser.cs -- What attribute can be accessible for handler.
+        -> Models -- Defines data structure used by application services and handlers.
+            -> Result.cs -- For application services returned result data structure, included success/failed + error message.
+        -> Security -- Defines guards that is being used in application.
+            -> AuthorizeAttribute.cs -- New attribute that can be used in Api handler.
+        -> Validation -- Defines new kinds of validation being used in application.
+            -> FluentValidationExtensions.cs -- Validation and auto attach message when failed.
+            -> ValidationMessageBuilder.cs -- Common used error message when validate failed.
+    -> EquipmentItems -- All operations/use cases for equipment item.
+        -> Commands -- Influencing database kind of operations.
+            -> CreateEquipmentItem -- Define handler and validator for creating new equipment item.
+                -> CreateEquipmentItem.cs -- Create equipment item handler and request obj for MediatR handler.
+                -> CreateEquipmentItemValidation.cs -- Create equipment item request obj validator.
+            -> {Action}{class_name} -- Define handler and validator for {Action} {class_name}.
+                -> {Action}{class_name}.cs -- {Action} {class_name} handler and request obj for MediatR handler.
+                -> {Action}{class_name}Validation.cs -- {Action} {class_name} request obj validator.
+        -> Queries -- Only for getting info and for validation, never modify records.
+            -> GetEquipmentItem -- Define handler, validator and response DTO for get equipment item.
+                -> EquipmentItemDto.cs -- Mapping equipment item to a organized obj for get equipment item, omit unnecessary properties.
+                -> GetEquipmentItem.cs -- Get equipment item handler + request obj.
+    -> {class_name}s -- All operations/use cases for {class_name}.
+-> Domain -- Pure business rules about how business define data and data operation flow should follow.
+    -> Common
+        -> BaseEvent.cs -- {Not enough context to decide the usage.}
+        -> RentalSystemDbBase.cs -- Base class for all entity type, it derives methods and must have properties.
+    -> Constants -- Defines obj with values that cant be changed.
+        -> Roles.cs -- Application included roles.
+    -> Entities -- Defines table properties and their operations.
+        -> Audit.cs -- Used for monitoring errors, modify behavior and such.
+        -> Damage.cs -- Reporting returned equipment item damages.
+        -> EquipmentCategory.cs -- Used to categorize each equipment item.
+        -> EquipmentItem.cs -- Item for user to rent or view.
+        -> Inspection.cs -- Technician inspect returned item records.
+        -> MaintenanceJob.cs -- Damage report auto create this entity record, await for technician.
+        -> Payment.cs -- Records for different fee including damage fee/late fee/others.
+        -> RentalOrder.cs -- Remembering order that is being placed by customers and the status.
+        -> RentalOrderItem.cs -- Attach with order, the different equipment item that is being ordered.
+        -> RentalStatusHistory.cs -- Auto created when a order status is being changed.
+    -> Enum -- Defines new option type.
+        -> Extensions -- Mainly for string to Enum conversion. (Future maybe inaccurate)
+            -> EquipmentConditionExtension.cs -- Case insensitive and convert to EquipmentCondition enum.
+            -> {enum_name}Extension.cs -- Case insensitive and convert to {enum_name} enum.
+        -> CautionLevel.cs -- Business request success/failure logging types to filter important ones.
+        -> EmployeeStatus.cs -- Employee currently being in vacation, retired or others.
+        -> EquipmentItem.cs -- Is equipment item being rented? Or should customer be caution about the condition is bad?
+        -> MaintenanceJob.cs -- How is the maintenance going? Unrepairable?
+        -> Payment.cs -- Is the payment paid? What kind of payment is this?
+        -> RentalStatus.cs -- Staff approved the order? Did customer returned all the item?

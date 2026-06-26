@@ -5,6 +5,9 @@ using RentalSystem.Application.Common.Exceptions;
 
 namespace RentalSystem.Api.Infrastructure;
 
+// This converts exception to status code when the throw type match
+
+
 /// <summary>
 /// Converts well-known application exceptions into RFC 9110-compliant <see cref="ProblemDetails"/> responses,
 /// mapping <see cref="ValidationException"/> → 400, <see cref="NotFoundException"/> → 404,
@@ -40,6 +43,20 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
                 Status = StatusCodes.Status403Forbidden,
                 Title = "Forbidden",
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.4"
+            }),
+            ArgumentException ae => (StatusCodes.Status400BadRequest, new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = "Value are not valid",
+                Detail = ae.Message
+            }),
+            InvalidOperationException ioe => (StatusCodes.Status409Conflict, new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+                Title = "Operation cant be completed",
+                Detail = ioe.Message
             }),
             _ => (-1, null)
         };

@@ -1,0 +1,20 @@
+{
+  "category": {
+    "name": "Laptop",
+    "createdByUserId": null,
+    "assetTagPrefix": "LAP"
+  },
+  "equipmentItem": {
+    "depositFee": 20,
+    "feePerDay": 10,
+    "lateFeePerDay": 15,
+    "description": "Processor (SoC) - Qualcomm Snapdragon X Elite (12 Core)\nGraphics (GPU) - Integrated Qualcomm Adreno GPU\nNeural Processor (NPU) - Qualcomm Hexagon\nRAM - 32GB (LPDDR5x)",
+    "name": "Surface Laptop, 15-inch (7th Edition)",
+    "condition": "New",
+    "status": "Available",
+    "serialNumber": "SKU: EP2-34627",
+    "imagePath": null,
+    "assetUniqueIdentifier": "MS001",
+    "assetTag": "LAP-MS001"
+  }
+}

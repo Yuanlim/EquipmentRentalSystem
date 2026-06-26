@@ -17,13 +17,36 @@ public class EquipmentCategoryCreationTest
     [InlineData("lighting equipment", "LTE", "lighting equipment", "Lighting Equipment", "LTE")]
     public void Constructor_ValidCategoryName_NormalizedName(string name, string assetTagPrefix, string expectedName, string expectedNormalized, string expectedPrefix)
     {
-        string? createdByUserId = null;
-
-        var equipmentCategory = new EquipmentCategory(name, createdByUserId, assetTagPrefix);
+        var equipmentCategory = CreateFlow(name, assetTagPrefix);
 
         // Assertion
         equipmentCategory.Name.ShouldBe(expectedName);
         equipmentCategory.NormalizedName.ShouldBe(expectedNormalized);
         equipmentCategory.AssetTagPrefix.ShouldBe(expectedPrefix);
     }
+
+    // invalid when equipment category is null, empty or whitespace
+
+    [Theory]
+    [InlineData(null, "Hw")]
+    [InlineData("", "Hw")]
+    [InlineData("   ", "Hw")]
+    public void Constructor_InvalidCategoryName_NormalizedName(string? name, string assetTagPrefix)
+    {
+        var exception = Should.Throw<ArgumentException>(() => CreateFlow(name, assetTagPrefix));
+        exception.Message.ShouldBe("EquipmentCategory category name shouldn't be whitespace, empty or null.");
+    }
+
+    [Theory]
+    [InlineData(" hEllo  world  ", null)]
+    [InlineData(" hEllo  world  ", "")]
+    [InlineData(" hEllo  world  ", " ")]
+    public void Constructor_InvalidCategoryPrefix_NormalizedName(string name, string? assetTagPrefix)
+    {
+        var exception = Should.Throw<ArgumentException>(() => CreateFlow(name, assetTagPrefix));
+        exception.Message.ShouldBe("EquipmentCategory asset tag prefix shouldn't be whitespace, empty or null.");
+    }
+
+    public static EquipmentCategory CreateFlow(string? name, string? assetTagPrefix)
+    => new EquipmentCategory(name, null, assetTagPrefix);
 }
